@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.lygttpod.monitor">
+
+    <application>
+        <activity
+            android:name=".ui.MonitorMainActivity"
+            android:icon="@mipmap/monitor_logo"
+            android:label="@string/monitor_app_name"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.lygttpod.monitor.${applicationId}"
+            android:theme="@style/Monitor_AppTheme" />
+
+        <activity
+            android:name=".ui.MonitorDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Monitor_AppTheme" />
+
+        <activity
+            android:name=".ui.MonitorConfigActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Monitor_AppTheme" />
+
+        <activity-alias
+            android:name=".ui.MonitorMainActivity"
+            android:exported="true"
+            android:icon="@mipmap/monitor_logo"
+            android:label="@string/monitor_app_name"
+            android:targetActivity="com.lygttpod.monitor.ui.MonitorMainActivity"
+            android:taskAffinity="com.lygttpod.monitor.${applicationId}">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <provider
+            android:name=".provider.MonitorProvider"
+            android:authorities="${applicationId}.monitor_provider"
+            android:exported="false" />
+    </application>
+</manifest>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp">
+
+        <TextView
+            android:id="@+id/tv_url_des"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Url"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_url"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/tv_url_des"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="www.baidu.comwww.baidu.comwww.baidu.comwww.baidu.com" />
+
+        <TextView
+            android:id="@+id/tv_method_des"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Method"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_url_des"
+            app:layout_constraintTop_toBottomOf="@+id/tv_url" />
+
+        <TextView
+            android:id="@+id/tv_method"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/tv_url_des"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_method_des"
+            tools:text="www.baidu.com" />
+
+
+        <TextView
+            android:id="@+id/tv_request_date_des"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="RequestDate"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_url_des"
+            app:layout_constraintTop_toBottomOf="@+id/tv_method" />
+
+        <TextView
+            android:id="@+id/tv_request_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/tv_url_des"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_request_date_des"
+            tools:text="www.baidu.com" />
+
+        <TextView
+            android:id="@+id/tv_header_des"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Header"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_url_des"
+            app:layout_constraintTop_toBottomOf="@+id/tv_request_date_des" />
+
+        <TextView
+            android:id="@+id/tv_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/tv_url_des"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_header_des"
+            tools:text="www.baidu.com" />
+
+        <TextView
+            android:id="@+id/tv_request_body_des"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="RequestBody"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_url_des"
+            app:layout_constraintTop_toBottomOf="@+id/tv_header" />
+
+        <TextView
+            android:id="@+id/tv_request_body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            app:layout_constraintLeft_toRightOf="@+id/tv_url_des"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_request_body_des"
+            tools:text="www.baidu.com" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

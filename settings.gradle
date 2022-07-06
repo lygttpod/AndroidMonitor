@@ -1,0 +1,4 @@
+rootProject.name = "AndroidMonitor"
+include ':app'
+include ':monitor'
+include ':monitor-plugin'

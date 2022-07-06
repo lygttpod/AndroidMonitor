@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>抓包助手</title>
+    <link rel="stylesheet"
+          href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://unpkg.com/dayjs"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/jquery-jsonview/1.2.3/jquery.jsonview.css"
+          rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-jsonview/1.2.3/jquery.jsonview.js"></script>
+    <script>
+        var lastFetchId = 0;
+        var autoFetchRequest;
+        $(document).ready(function () {
+            $("#query").on("click", function () {
+                cancelAutoFetch();
+                resetCheckboxStatus();
+                var limit = $("#limit").val();
+                if (limit <= 0) {
+                    limit = 10;
+                }
+                $.get("/query?limit=" + limit, function (result) {
+                    if (result == undefined || result.length <= 0 || result == "[]") {
+                        emptyView();
+                        return;
+                    }
+                    getRootView().empty();
+                    var jsonObj = JSON.parse(result);
+                    var code = jsonObj.code;
+                    var data = jsonObj.data;
+                    if (code != 200 || data.length <= 0) {
+                        emptyView();
+                        return;
+                    }
+                    lastFetchId = data[0].id;
+                    for (index in data) {
+                        var monitorData = data[index];
+                        createItem(monitorData, index, true);
+                    }
+                }).error(function () {
+                    errorView()
+                });
+            });
+
+            $("#clean").on("click", function () {
+                cancelAutoFetch();
+                resetCheckboxStatus();
+                lastFetchId = 0;
+                $.get("/clean", function (data) {
+                    emptyView();
+                });
+            });
+
+            $("#isAutoFetch").change(function () {
+                var isAutoFetch = $("input[id='isAutoFetch']").is(':checked')
+                if (isAutoFetch) {
+                    getRootView().empty();
+                    autoFetch();
+                } else {
+                    cancelAutoFetch()
+                }
+            });
+
+            $("#weak_select_state").change(function () {
+                var isAutoFetch = $("input[id='isAutoFetch']").is(':checked')
+                if (isAutoFetch) {
+                    getRootView().empty();
+                    autoFetch();
+                } else {
+                    cancelAutoFetch()
+                }
+            });
+
+            $("#isOpenMock").change(function () {
+                var isOpen = $("input[id='isOpenMock']").is(':checked')
+
+                $.get("/openMockService?isOpen=" + isOpen, function (data) {
+                    if (isOpen) {
+                        alert("mock服务已开启");
+                    } else {
+                        alert("mock服务已关闭");
+                    }
+                }).error(function () {
+                    alert("mock服务已操作失败");
+                });
+            });
+
+            $("#apply_mock_btn").on("click", function () {
+                var mockBaseUrl = $("#mock_base_url_input").val();
+                var mockPath = $("#mock_path_input").val();
+                var mockResponse = $("#mock_response_input").val();
+                if (isEmpty(mockPath)) {
+                    alert("mock的path不能为空");
+                    return;
+                }
+                if (isEmpty(mockResponse) && isEmpty(mockBaseUrl)) {
+                    alert("mock的baseUrl或mock的response不能都为空");
+                    return;
+                }
+
+                <!--                $.get("/setMockConfig?mockBaseUrl=" + mockBaseUrl + "&mockPath=" + mockPath + "&mockResponse=" + mockResponse, function (data) {-->
+                <!--                    alert("mock环境配置成功");-->
+                <!--                }).error(function () {-->
+                <!--                    alert("mock环境配置失败，请稍后再试！");-->
+                <!--                });-->
+
+                //get请求 参数有长度限制，故使用post请求
+                $.post("/setMockConfig",
+                    {
+                        mockBaseUrl: mockBaseUrl,
+                        mockPath: mockPath,
+                        mockResponse: mockResponse
+                    },
+                    function (data, status) {
+                        if (status == "success") {
+                            alert("mock环境配置成功");
+                        } else {
+                            alert("mock环境配置失败，请稍后再试！");
+                        }
+                    });
+            });
+
+        });
+
+        function autoFetch() {
+            cancelAutoFetch();
+            autoFetchRequest = $.ajax({
+                timeout: 100000,
+                url: "/autoFetch?lastFetchId=" + lastFetchId,
+                type: "get",
+                success: function (result) {
+                    if (result == undefined || result.length <= 0 || result == "[]") {
+                        return;
+                    }
+                    var jsonObj = JSON.parse(result);
+                    var code = jsonObj.code;
+                    var data = jsonObj.data;
+                    if (code == 200 && data.length > 0) {
+                        lastFetchId = data[0].id;
+                        for (index in data) {
+                            var monitorData = data[index];
+                            createItem(monitorData, index, false);
+                        }
+                    }
+                },
+                complete: function (XMLHttpRequest, status) {
+                    console.log(status)
+                    if (status == "success" || status == "timeout") {
+                        autoFetch();
+                    }
+                }
+            });
+        }
+
+        function cancelAutoFetch() {
+            if (autoFetchRequest != undefined && autoFetchRequest != null) {
+                autoFetchRequest.abort()
+            }
+        }
+
+        /**
+         * 创建列表item
+         */
+        function createItem(item, position, isAddChild2Bottom) {
+            if (!isAddChild2Bottom) {
+                position = item.id
+            }
+            var list = "";
+            var collapseId = "collapse" + position;
+            var jsonViewId = collapseId + "jsonId";
+            list += createDivStart(item);
+
+            list += createTitleDiv(item, collapseId, position, isAddChild2Bottom);
+            list += createBodyDiv(item, collapseId, jsonViewId);
+
+            list += createDivEnd();
+
+            var createDiv = $("<div></div>");
+            createDiv.append(list);
+            if (isAddChild2Bottom) {
+                getRootView().append(createDiv);
+            } else {
+                createDiv.hide().fadeIn(500);
+                getRootView().prepend(createDiv);
+            }
+            createJsonViewAfterHtmlAppend(item, jsonViewId);
+
+            var copyBtnId = "copy_btn" + collapseId;
+            var copyResponseContentId = "copy_response_content" + collapseId;
+            var copyBtn = document.getElementById(copyBtnId);
+            if (copyBtn != null) {
+                copyBtn.addEventListener("click", function () {
+                    copyData(copyBtnId, copyResponseContentId);
+                });
+            }
+        }
+
+        function createDivStart(data) {
+            var code = data.responseCode;
+            var divStyle = "";
+            switch (code) {
+                case 200:
+                    divStyle = '<div class= "panel panel-info" >';
+                    break;
+                case 500:
+                    divStyle = '<div class= "panel panel-danger" >';
+                    break;
+                default:
+                    divStyle = '<div class= "panel panel-warning" >';
+            }
+            return divStyle
+        }
+
+        function createDivEnd() {
+            return '</div>';
+        }
+
+        /**
+         * 创建title内容
+         */
+        function createTitleDiv(data, collapseId, position, isShowIndex) {
+            var titleDiv = '<div class="panel-heading">';
+            titleDiv += '<a data-toggle="collapse" data-parent="#root_list_div" href=#';
+            titleDiv += collapseId + '>';
+            if (isShowIndex) {
+                titleDiv += parseInt(position) + 1 + "、";
+            }
+            titleDiv += createSpan(data);
+            titleDiv += data.path;
+            titleDiv += '</a></div>';
+            return titleDiv
+        }
+
+        /**
+         * 创建body内容
+         */
+        function createBodyDiv(data, collapseId, jsonViewId) {
+            var bodyDiv = '<div class="panel-collapse collapse" id=';
+            bodyDiv += collapseId + '>';
+            bodyDiv += '<div class="panel-body"><pre>';
+            bodyDiv += createRequestHeaderTable(data);
+            bodyDiv += createRequestUrl(data);
+            bodyDiv += createPostRequestParams(data);
+            bodyDiv += createCopyBtn(data, collapseId);
+            bodyDiv += '<div id= "' + jsonViewId + '"></div>';
+            bodyDiv += '</pre></div></div>';
+            return bodyDiv;
+        }
+
+        /**
+         *创建请求头表格
+         */
+        function createRequestHeaderTable(data) {
+            if (isNotEmpty(data.requestHeaders) && isJSON(data.requestHeaders)) {
+                var headerObj = JSON.parse(data.requestHeaders);
+                if (headerObj.length < 7) return "";
+                var table = '<table class="table table-bordered">';
+                table += '<thead> <tr> <th>host</th> <th>' + headerObj[0].name + '</th> <th>' + headerObj[1].name + '</th> <th>' + headerObj[2].name + '</th> <th>' + headerObj[3].name + '</th><th>' + headerObj[4].name + '</th> <th>' + headerObj[5].name + '</th> <th>' + headerObj[6].name + '</th> </tr> </thead>';
+                table += '<tbody><tr class="info">';
+                table += '<td>' + data.host + '</td>';
+                table += '<td>' + headerObj[0].value + '</td>';
+                table += '<td>' + headerObj[1].value + '</td>';
+                table += '<td>' + headerObj[2].value + '</td>';
+                table += '<td>' + headerObj[3].value + '</td>';
+                table += '<td>' + headerObj[4].value + '</td>';
+                table += '<td>' + headerObj[5].value + '</td>';
+                table += '<td>' + headerObj[6].value + '</td>';
+                table += '</tr></tbody></table><HR>';
+                return table;
+            } else {
+                return "";
+            }
+        }
+
+        /**
+         * 创建请求完整路径
+         */
+        function createRequestUrl(data) {
+            if (isEmpty(data.url)) return "";
+            var info = '<div class="well">';
+            info += "请求完整路径：" + data.url;
+            info += '</div>';
+            return info;
+        }
+
+        /**
+         * 创建请求参数
+         */
+        function createPostRequestParams(data) {
+            if (isEmpty(data.requestBody)) return "";
+            var info = '<div class="well">';
+            info += "请求参数：" + data.requestBody;
+            info += '</div>';
+            return info;
+        }
+
+        /**
+         * 创建复制按钮
+         */
+        function createCopyBtn(data, id) {
+            var responseBody = data.responseBody;
+            if (isEmpty(responseBody)) return "";
+            var info = '<div class="copy_class well">';
+            info += '<div id=';
+            info += "copy_btn" + id + '>';
+            info += "复制文本" + '</div>';
+            info += '<textarea class="copy_response"  id=';
+            info += "copy_response_content" + id + '>';
+            info += responseBody;
+            info += '</textarea>';
+            info += '</div>';
+            return info;
+        }
+
+        function copyData(copyBtnId, copyResponseContentId) {
+            var copyContentView = document.getElementById(copyResponseContentId);
+            copyContentView.select(); // 选中文本
+            document.execCommand("copy"); // 执行浏览器复制命令
+            var copyBtnView = document.getElementById(copyBtnId);
+            copyBtnView.textContent = "复制成功";
+            copyBtnView.style.color = '#5cb85c';
+            setTimeout(function () {
+                copyBtnView.textContent = "复制文本";
+                copyBtnView.style.color = 'black';
+            }, 1000);
+        }
+
+        /**
+         * 创建jsonView数据
+         */
+        function createJsonViewAfterHtmlAppend(item, jsonViewId) {
+            if (isNotEmpty(item.responseBody) && isJSON(item.responseBody)) {
+                try {
+                    $("#" + jsonViewId).JSONView(item.responseBody);
+                } catch (e) {
+                    createErrorJsonViewAfterHtmlAppend(item, jsonViewId);
+                }
+            } else {
+                createErrorJsonViewAfterHtmlAppend(item, jsonViewId);
+            }
+        }
+
+        function createErrorJsonViewAfterHtmlAppend(item, jsonViewId) {
+            var errorMessage = item.errorMsg;
+            if (isEmpty(errorMessage)) {
+                errorMessage = item.responseMessage;
+            }
+            $("#" + jsonViewId).append(errorMessage);
+        }
+
+        function isEmpty(str) {
+            return str == null || str == undefined || str.length <= 0;
+        }
+
+        function isNotEmpty(str) {
+            return str != null && str != undefined && str.length > 0;
+        }
+
+        function isJSON(str) {
+            if (typeof str == 'string') {
+                try {
+                    var obj = JSON.parse(str);
+                    if (typeof obj == 'object' && obj) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+
+                } catch (e) {
+                    console.log('error：' + str + '!!!' + e);
+                    return false;
+                }
+            }
+            console.log('It is not a string!')
+        }
+
+
+        /**
+         * 创建footer（展示效果不好，暂未使用）
+         */
+        function createFooterDiv(data) {
+            var footerDiv = '<div class="panel-footer">';
+            footerDiv += data.host;
+            footerDiv += '</div>';
+            return footerDiv;
+        }
+
+        /**
+         * 创建状态码，请求方式，请求时间的标签
+         */
+        function createSpan(data) {
+            var spanStyle = "";
+            switch (data.responseCode) {
+                case 200:
+                    spanStyle = '<span class="label label-success">';
+                    break;
+                case 500:
+                    spanStyle = '<span class="label label-danger">';
+                    break;
+                default:
+                    spanStyle = '<span class="label label-warning">';
+            }
+
+            var span = "";
+
+            if (isNotEmpty(data.source)) {
+                span = '<span class="label label-danger">' + data.source + '</span>';
+            }
+
+            span += spanStyle + getFormatDate(data.requestDate) + '</span>';
+            span += spanStyle + data.responseCode + '</span>';
+            span += spanStyle + data.method + '</span>';
+            var duration;
+            if (data.duration != undefined) {
+                duration = data.duration;
+                span += spanStyle + duration + " ms" + '</span>';
+            }
+
+            var responseSize = data.responseContentLength;
+            if (responseSize == undefined) {
+                responseSize = 0
+            }
+            if (responseSize > 0) {
+                var responseSizeString;
+                if (responseSize > 1024) {
+                    responseSizeString = (responseSize / 1024).toFixed(2) + " kb"
+                } else {
+                    responseSizeString = responseSize + " bytes"
+                }
+                span += spanStyle + responseSizeString + '</span>';
+            }
+
+            return span;
+        }
+
+        /**
+         *格式化请求时间
+         * @param date
+         * @returns {*}
+         */
+        function getFormatDate(date) {
+            return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+        }
+
+        /**
+         * 空布局
+         */
+        function emptyView() {
+            getRootView().empty()
+            getRootView().append('<h1 style="text-align: center">' + "暂无数据" + "</h1><hr/>");
+        }
+
+        /**
+         * 错误布局
+         */
+        function errorView() {
+            getRootView().empty()
+            getRootView().append('<h1 style="text-align: center">' + "服务器异常，请重启APP" + "</h1><hr/>");
+        }
+
+        function getRootView() {
+            return $("#root_list_div");
+        }
+
+        function resetCheckboxStatus() {
+            $("#isAutoFetch").prop("checked", false);
+        }
+
+        /**
+         * 设置弱网类型
+         * @param select
+         */
+        function onWeakMetSelectionChange(select) {
+            var selectedOption = select.options[select.selectedIndex].value;
+            $.get("/setWeakNetConfig?weakType=" + selectedOption, function (data) {
+                alert("网络《" + selectedOption + "》设置成功");
+            }).error(function () {
+                alert("设置弱网环境失败，请稍候再试！");
+            });
+        }
+
+
+    </script>
+    <style>
+        .panel {
+            margin-bottom: 10px;
+        }
+
+        span {
+            margin-left: 5px;
+            margin-right: 10px;
+        }
+
+        .input-group {
+            width: 400px;
+            height: 40px;
+        }
+
+        .btn {
+            height: 40px;
+        }
+
+        .form-control {
+            height: 40px;
+        }
+
+        .selected_container {
+            height: 40px;
+            width: 60px;
+        }
+
+        .checkbox {
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .center_container {
+            display: flex;
+            align-items: center;
+        }
+
+        .copy_response {
+            width: 10px;
+            height: 10px;
+        }
+
+        .copy_class {
+            display: flex;
+            align-items: center;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="root">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">抓包助手</a>
+            </div>
+            <div>
+                <ul class="nav navbar-nav">
+                    <li class="nav-item active"><a href="#">网络数据</a></li>
+                    <li class="nav-item"><a href="sp_index" target="_blank">本地文件</a></li>
+                    <li class="nav-item disabled"><a href="#">more coming</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div style="padding: 10px 10px 10px 10px; margin-top: 30px">
+
+        <div class="center_container"
+             style="margin: 10px 10px 10px 10px;display: flex;height: 60px;">
+            <div class="input-group">
+                <input type="text" class="form-control" id="limit" placeholder="默认十条，建议单次查询50条以内数据">
+                <span class="input-group-btn"><button class="btn btn-success" id="query"
+                                                      type="button">查询</button></span>
+            </div>
+            <button type="button" id="clean" class="btn btn-danger" style="margin-left: 20px">
+                清空数据库
+            </button>
+            <div class="checkbox" style="margin-left: 20px"><label><input id="isAutoFetch"
+                                                                          type="checkbox">开启自动监听</label>
+            </div>
+
+
+            <div class="center_container" style="margin-left: 20px;">
+                <div class="checkbox" style="margin-left: 20px"><label>网络配置</label></div>
+                <select id="weak_select_state" style="margin-left: 20px"
+                        class="selectpicker selected_container"
+                        onchange="onWeakMetSelectionChange(this)">
+                    <option selected>关闭</option>
+                    <option>超时</option>
+                    <option>断网</option>
+                    <option>限速</option>
+                </select>
+            </div>
+
+            <div class="checkbox" style="margin-left: 50px"><label><input id="isOpenMock"
+                                                                          type="checkbox">开启mock服务</label>
+            </div>
+
+            <button type="button" class="btn btn-success" data-toggle="modal"
+                    data-target="#mockModalCenter"
+                    style="margin-left: 50px">配置mock服务
+            </button>
+
+        </div>
+
+        <div id="root_list_div"></div>
+
+    </div>
+</div>
+
+
+<!-- mock配置弹框模块 -->
+<div class="modal fade" id="mockModalCenter" tabindex="-1" role="dialog"
+     aria-labelledby="mockModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mockModalCenterTitle">配置mock服务</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <textarea class="form-control" id="mock_base_url_input" rows="5"
+                                  placeholder="mock服务的baseUrl（一个baseUrl可以对应多个path）"
+                                  style="height: 60px"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="mock_path_input" rows="5"
+                                  placeholder="mock请求的paths（必填项）"
+                                  style="height: 60px"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <h5 class="modal-title">mockBaseUrl和mockResponse两种mock方式二选一</h5>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="mock_response_input" rows="5"
+                                  placeholder="mock请求的response（针对单个mockPath配置response）"
+                                  style="height: 100px"></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success" id="apply_mock_btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/include_status_bar_view_layout" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_monitor_theme"
+        android:gravity="center"
+        android:text="配置"
+        android:textColor="@android:color/white"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/v_status_bar" />
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:src="@mipmap/monitor_app_back_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_title" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_monitor_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="抓包开关"
+                android:textColor="@android:color/black"
+                android:textSize="18dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Switch
+                android:id="@+id/monitor_switch_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:checked="false"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_monitor_title"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_monitor_title"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <TextView
+                android:id="@+id/tv_weak_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="网络配置开关"
+                android:textColor="@android:color/black"
+                android:textSize="18dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_monitor_title" />
+
+            <Switch
+                android:id="@+id/switch_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:checked="false"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_weak_title"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_weak_title"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_weak_config_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/monitor_block_color"
+                android:padding="20dp"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_weak_title"
+                tools:visibility="visible">
+
+                <RadioGroup
+                    android:id="@+id/radio_group"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/radio_btn_time_out"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_radio_left"
+                        android:button="@null"
+                        android:checked="true"
+                        android:gravity="center"
+                        android:text="超时"
+                        android:textColor="@color/text_color_radio" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/radio_btn_no_net"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_radio_center"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="断网"
+                        android:textColor="@color/text_color_radio" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/radio_btn_speed_limit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_radio_right"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="限速"
+                        android:textColor="@color/text_color_radio" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/tv_des"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/radio_group"
+                    tools:text="当前配置为:模拟网络请求超时" />
+
+                <TextView
+                    android:id="@+id/tv_speed_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="响应限速："
+                    android:textColor="@android:color/black"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_des" />
+
+                <EditText
+                    android:id="@+id/edit_speed"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:hint="1024"
+                    android:inputType="number"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_speed_title"
+                    app:layout_constraintLeft_toRightOf="@+id/tv_speed_title"
+                    app:layout_constraintTop_toTopOf="@+id/tv_speed_title" />
+
+                <TextView
+                    android:id="@+id/tv_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="byte/s"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_speed_title"
+                    app:layout_constraintLeft_toRightOf="@+id/edit_speed"
+                    app:layout_constraintTop_toTopOf="@+id/tv_speed_title" />
+
+                <TextView
+                    android:id="@+id/tv_speed_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="提示：数值越小越响应慢，默认为1k/s   1k = 1024byte   0为不限速"
+                    android:textColor="@color/monitor_colorPrimary"
+                    android:textSize="11dp"
+                    app:layout_constraintLeft_toLeftOf="@+id/tv_speed_title"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_speed_title" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/group_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:constraint_referenced_ids="tv_speed_title,edit_speed,tv_speed,tv_speed_tip"
+                    tools:visibility="visible" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tv_mock_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="mock接口数据配置开关"
+                android:textColor="@android:color/black"
+                android:textSize="18dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cl_weak_config_container" />
+
+            <Switch
+                android:id="@+id/mock_switch_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:checked="false"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_mock_title"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_mock_title"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_mock_config_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/monitor_block_color"
+                android:padding="20dp"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_mock_title"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tv_baseurl_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="配置BaseUrl"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/edit_base_url"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_radio_center"
+                    android:gravity="left"
+                    android:hint="mock服务的baseUrl（一个baseUrl可以对应多个path）"
+                    android:minHeight="40dp"
+                    android:padding="5dp"
+                    android:textSize="12dp"
+                    app:layout_constraintLeft_toLeftOf="@+id/tv_baseurl_title"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_baseurl_title" />
+
+                <TextView
+                    android:id="@+id/tv_path_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="mock的path"
+                    app:layout_constraintLeft_toLeftOf="@+id/tv_baseurl_title"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_base_url" />
+
+                <EditText
+                    android:id="@+id/edit_path"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_radio_center"
+                    android:gravity="left"
+                    android:hint="mock请求的paths（必填项）\n提示：多个path使用逗号分隔"
+                    android:minHeight="40dp"
+                    android:minLines="4"
+                    android:padding="5dp"
+                    android:textSize="12dp"
+                    app:layout_constraintLeft_toLeftOf="@+id/tv_path_title"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_path_title" />
+
+                <TextView
+                    android:id="@+id/tv_response_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="mockBaseUrl和mockResponse两种mock方式二选一"
+                    android:textColor="@color/monitor_colorPrimary"
+                    android:textSize="12dp"
+                    app:layout_constraintLeft_toLeftOf="@+id/tv_baseurl_title"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_path" />
+
+
+                <TextView
+                    android:id="@+id/tv_response_code_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="mock成功的responseCode"
+                    app:layout_constraintLeft_toLeftOf="@+id/tv_baseurl_title"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_response_tip" />
+
+                <EditText
+                    android:id="@+id/edit_response_code"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_radio_center"
+                    android:gravity="left"
+                    android:hint="mock请求成功的responseCode(不填默认为200)"
+                    android:inputType="number"
+                    android:minLines="1"
+                    android:padding="5dp"
+                    android:textSize="12dp"
+                    app:layout_constraintLeft_toLeftOf="@+id/tv_response_code_title"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_response_code_title" />
+
+                <TextView
+                    android:id="@+id/tv_response_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="mock的responseBody"
+                    app:layout_constraintLeft_toLeftOf="@+id/tv_baseurl_title"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_response_code" />
+
+                <EditText
+                    android:id="@+id/edit_response"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_radio_center"
+                    android:gravity="left"
+                    android:hint="mock请求的responseBody（针对单个mockPath配置responseBody）"
+                    android:minHeight="40dp"
+                    android:minLines="6"
+                    android:padding="5dp"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@+id/tv_response_title"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_response_title" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

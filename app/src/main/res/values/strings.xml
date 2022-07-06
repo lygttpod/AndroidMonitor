@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AndroidMonitor</string>
+    <string name="monitor_app_name">AndroidMonitor抓包</string>
+    <string name="tips">1、局域网内通过电脑浏览器打开上述服务地址\n2、点击发送请求\n3、在网页端或手机抓包app可以查看请求数据</string>
+</resources>
