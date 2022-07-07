@@ -1,4 +1,4 @@
-# 基于WebSocket实现的抓取OKHTTP请求的工具
+# 基于[AndroidLocalService](https://github.com/lygttpod/android-local-service)实现的抓取OKHTTP请求的工具
 
 ### [**Demo下载体验**](https://www.pgyer.com/AndroidMonitor)
 
@@ -93,6 +93,3 @@
 - APP本地开启一个socket服务
 - 与本地socket服务通信
 - UI展示数据
-
-# 技术扩展
-### 基于WebSocket实现的Android微服务组件可以看这里[AndroidLocalService](https://github.com/lygttpod/android-local-service)
