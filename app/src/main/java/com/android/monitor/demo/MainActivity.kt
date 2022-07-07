@@ -1,5 +1,6 @@
 package com.android.monitor.demo
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -19,9 +20,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getServiceAddress()
+        initData()
         binding.btnSendRequest.setOnClickListener {
             sendRequest("https://www.wanandroid.com/article/list/0/json")
         }
+    }
+
+    private fun initData() {
+        sendRequest("https://www.wanandroid.com/banner/json")
+        spFileCommit()
     }
 
     private fun sendRequest(url: String) {
@@ -47,5 +54,22 @@ class MainActivity : AppCompatActivity() {
             val monitorUrl = "$it:${MonitorHelper.port}/index"
             binding.tvAddress.text = monitorUrl
         }
+    }
+
+    private fun spFileCommit() {
+        getSharedPreferences("spFileName111", Context.MODE_PRIVATE).edit().also {
+            it.putString("testString", "我是字符串")
+            it.putInt("testInt", 111)
+            it.putBoolean("testBoolean", true)
+            it.putFloat("testFloat", 222f)
+            it.putLong("testLong", System.currentTimeMillis())
+        }.apply()
+        getSharedPreferences("spFileName222", Context.MODE_PRIVATE).edit().also {
+            it.putString("keyString", "我是字符串")
+            it.putInt("keyInt", 111)
+            it.putBoolean("keyBoolean", true)
+            it.putFloat("keyFloat", 222f)
+            it.putLong("keyLong", System.currentTimeMillis())
+        }.apply()
     }
 }
