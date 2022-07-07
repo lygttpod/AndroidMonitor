@@ -1,4 +1,6 @@
-# 基于OKHttp的抓包工具
+# 基于WebSocket实现的抓取OKHTTP请求的工具
+
+### [**Demo下载体验**](https://www.pgyer.com/AndroidMonitor)
 
 ## 切记：monitor需要配合monitor-plugin使用
 
@@ -6,7 +8,7 @@
 
 添加依赖
 ```
-   debugImplementation 'io.github.lygttpod:monitor:0.0.1'
+   debugImplementation 'io.github.lygttpod:monitor:0.0.2'
 ```
 -备注： 使用debugImplementation是为了只在测试环境中引入
 
@@ -31,6 +33,7 @@
     apply plugin: 'monitor-plugin'
 
 ```
+> ## 原则上完成以上两步你的APP就成功集成了抓包工具，很简单有没有，如需定制化服务请看下边的个性化配置
 
 ### 3、 个性化配置
 
@@ -38,11 +41,15 @@
     ```
        <string name="monitor_app_name">XXX-抓包</string>
     ```
-    2、单个项目使用的话，添加依赖后可直接使用，无需初始化，库里会通过ContentProvider方式自动初始化
+    2、定制抓包入口logo图标：
+    ```
+       添加 monitor_logo.png 即可
+    ```
+    3、单个项目使用的话，添加依赖后可直接使用，无需初始化，库里会通过ContentProvider方式自动初始化
      
     默认端口8080(端口号要唯一)
         
-    3、多个项目都集成抓包工具，需要对不同项目设置不同的端口和数据库名字，用来做区分
+    4、多个项目都集成抓包工具，需要对不同项目设置不同的端口和数据库名字，用来做区分
         
     在主项目assets目录下新建 monitor.properties 文件，文件内如如下：对需要变更的参数修改即可
     ```
@@ -86,3 +93,6 @@
 - APP本地开启一个socket服务
 - 与本地socket服务通信
 - UI展示数据
+
+# 技术扩展
+### 基于WebSocket实现的Android微服务组件可以看这里[AndroidLocalService](https://github.com/lygttpod/android-local-service)
