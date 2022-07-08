@@ -29,7 +29,7 @@ class MonitorListAdapter : RecyclerView.Adapter<MonitorListAdapter.MonitorListHo
 
     fun setData(list: MutableList<MonitorData>?) {
         this.monitorList = list ?: mutableListOf()
-        notifyItemChanged(0, itemCount)
+        notifyDataSetChanged()
     }
 
     inner class MonitorListHolder(var containerView: View) :
