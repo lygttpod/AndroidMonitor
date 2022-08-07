@@ -2,13 +2,17 @@
 
 ### [**Demo下载体验**](https://www.pgyer.com/AndroidMonitor)
 
+### [**文件介绍---->Android抓包从未如此简单**](https://juejin.cn/post/7119083753376317448)
+
+
+
 ## 切记：monitor需要配合monitor-plugin使用
 
 ### 1、monitor接入
 
 添加依赖
 ```
-   debugImplementation 'io.github.lygttpod:monitor:0.0.4'
+   debugImplementation 'io.github.lygttpod:monitor:0.0.5'
 ```
 -备注： 使用debugImplementation是为了只在测试环境中引入
 
