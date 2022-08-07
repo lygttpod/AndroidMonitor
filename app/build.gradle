@@ -44,5 +44,5 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
 
     //3、依赖抓包库 只在debug环境下依赖  所有使用 debugImplementation
-    debugImplementation 'io.github.lygttpod:monitor:0.0.4'
+    debugImplementation 'io.github.lygttpod:monitor:0.0.5'
 }
