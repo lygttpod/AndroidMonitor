@@ -20,6 +20,10 @@
             android:name=".ui.MonitorConfigActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Monitor_AppTheme" />
+        <activity
+            android:name=".ui.sp.SPFileDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Monitor_AppTheme" />
 
         <activity-alias
             android:name=".ui.MonitorMainActivity"

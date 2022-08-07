@@ -9,4 +9,18 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="B2TDialogTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowAnimationStyle">@style/BottomToTopAnimation</item>
+    </style>
+
+    <style name="BottomToTopAnimation">
+        <item name="android:windowEnterAnimation">@anim/bottom_to_top</item>
+        <item name="android:windowExitAnimation">@anim/top_to_bottom</item>
+    </style>
 </resources>

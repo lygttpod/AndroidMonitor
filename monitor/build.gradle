@@ -51,6 +51,9 @@ dependencies {
     implementation "io.github.lygttpod.android-local-service:core:$als_version"
     implementation "io.github.lygttpod.android-local-service:annotation:$als_version"
     kapt "io.github.lygttpod.android-local-service:processor:$als_version"
+
+    implementation 'com.github.lygttpod:ShapeView:1.0.2'
+
 }
 
 apply from: '../upload.gradle'

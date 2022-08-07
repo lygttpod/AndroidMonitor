@@ -5,21 +5,22 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.navigation.NavigationBarView
 import com.lygttpod.monitor.MonitorHelper
 import com.lygttpod.monitor.R
-import com.lygttpod.monitor.adapter.MonitorListAdapter
-import com.lygttpod.monitor.data.MonitorData
 import com.lygttpod.monitor.databinding.ActivityMonitorMainBinding
+import com.lygttpod.monitor.ui.request.MonitorMainFragment
+import com.lygttpod.monitor.ui.sp.SPFileListFragment
 import com.lygttpod.monitor.utils.getPhoneWifiIpAddress
 import kotlin.concurrent.thread
 
-class MonitorMainActivity : AppCompatActivity() {
-
-    private var adapter: MonitorListAdapter? = null
+class MonitorMainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
 
     private var handle: Handler = Handler(Looper.getMainLooper())
 
@@ -30,8 +31,7 @@ class MonitorMainActivity : AppCompatActivity() {
         binding = ActivityMonitorMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initView()
-        initRv()
-        setData()
+        initPage()
     }
 
     override fun onDestroy() {
@@ -41,16 +41,8 @@ class MonitorMainActivity : AppCompatActivity() {
 
     private fun initView() {
         binding.tvTitle.text = getString(R.string.monitor_app_name)
-        binding.swipeRefresh.setOnRefreshListener {
-            handle.postDelayed({
-                binding.swipeRefresh.isRefreshing = false
-                setData()
-            }, 1000)
-        }
-
         binding.tvClean.setOnClickListener {
             thread { MonitorHelper.deleteAll() }
-            adapter?.setData(null)
         }
         getPhoneWifiIpAddress()?.let {
             binding.tvWifiAddress.visibility = View.VISIBLE
@@ -62,22 +54,44 @@ class MonitorMainActivity : AppCompatActivity() {
         binding.ivSetting.setOnClickListener {
             startActivity(Intent(this, MonitorConfigActivity::class.java))
         }
+
+        binding.bottomNavigationView.setOnItemSelectedListener(this)
     }
 
-    private fun setData() {
-        MonitorHelper.getMonitorDataListForAndroid(limit = 100)?.observe(this, Observer {
-            adapter?.setData(it)
+    private fun initPage() {
+        val fragments = listOf(MonitorMainFragment(), SPFileListFragment())
+        binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.viewPager.adapter = object : FragmentStateAdapter(this) {
+            override fun getItemCount() = fragments.size
+
+            override fun createFragment(position: Int): Fragment {
+                return fragments[position]
+            }
+        }
+        binding.viewPager.offscreenPageLimit = fragments.size
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                when (position) {
+                    0 -> binding.bottomNavigationView.selectedItemId = R.id.navigation_monitor
+                    1 -> binding.bottomNavigationView.selectedItemId = R.id.navigation_sharedPrefs
+                }
+            }
         })
     }
 
-    private fun initRv() {
-        adapter = MonitorListAdapter()
-        adapter?.itemClick = { gotoMonitorDetail(it) }
-        binding.rvMonitor.layoutManager = LinearLayoutManager(this)
-        binding.rvMonitor.adapter = adapter
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.navigation_monitor -> {
+                binding.viewPager.currentItem = 0
+                return true
+            }
+            R.id.navigation_sharedPrefs -> {
+                binding.viewPager.currentItem = 1
+                return true
+            }
+        }
+        return false
     }
 
-    private fun gotoMonitorDetail(monitorData: MonitorData) {
-        startActivity(MonitorDetailActivity.buildIntent(this, monitorData))
-    }
 }

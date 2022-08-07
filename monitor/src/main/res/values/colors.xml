@@ -13,5 +13,6 @@
     <color name="monitor_status_500">#26E79F</color>
 
     <color name="monitor_white">#ffffff</color>
+    <color name="monitor_block">#000000</color>
     <color name="monitor_block_color">#22aaaaaa</color>
 </resources>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.lygttpod.shape.view.ShapeConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:padding="15dp"
+    app:shapeCornersTopLeftRadius="10dp"
+    app:shapeCornersTopRightRadius="10dp"
+    app:shapeSolidColor="@color/monitor_white">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="@color/monitor_block"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="title" />
+
+    <TextView
+        android:id="@+id/tv_key"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/monitor_block"
+        android:textSize="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tv_type"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title"
+        tools:text="key" />
+
+    <com.lygttpod.shape.view.ShapeTextView
+        android:id="@+id/tv_type"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textColor="@color/monitor_white"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_key"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_key"
+        app:shapeCornersRadius="5dp"
+        app:shapeSolidColor="@color/monitor_colorPrimary"
+        tools:text="type" />
+
+    <EditText
+        android:id="@+id/et_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_radio_center"
+        android:gravity="top"
+        android:hint="请输入正确类型的值哦"
+        android:padding="5dp"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_modify"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_key" />
+
+    <com.lygttpod.shape.view.ShapeButton
+        android:id="@+id/btn_modify"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="修改"
+        android:textColor="@color/monitor_white"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:shapeCornersRadius="25dp"
+        app:shapeSolidColor="@color/monitor_colorPrimary" />
+</com.lygttpod.shape.view.ShapeConstraintLayout>
