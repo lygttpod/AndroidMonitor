@@ -2,11 +2,14 @@ package com.lygttpod.monitor.utils
 
 import com.lygttpod.monitor.data.HttpHeader
 import okhttp3.Headers
+import okhttp3.RequestBody
 import okhttp3.Response
 import okhttp3.internal.http.StatusLine
 import okio.Buffer
 import java.io.EOFException
 import java.net.HttpURLConnection
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 
 
 fun Headers?.toJsonString(): String {
@@ -80,4 +83,20 @@ internal fun Buffer.isProbablyUtf8(): Boolean {
     } catch (_: EOFException) {
         return false // Truncated UTF-8 sequence.
     }
+}
+
+fun RequestBody.readString(): String {
+    var result = ""
+    try {
+        val buffer = Buffer()
+        this.writeTo(buffer)
+        val charset: Charset =
+            this.contentType()?.charset(StandardCharsets.UTF_8) ?: StandardCharsets.UTF_8
+        if (buffer.isProbablyUtf8()) {
+            result = buffer.readString(charset)
+        }
+    } catch (e: Exception) {
+
+    }
+    return result
 }

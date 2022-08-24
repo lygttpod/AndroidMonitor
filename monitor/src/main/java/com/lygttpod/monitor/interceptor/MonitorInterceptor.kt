@@ -7,6 +7,7 @@ import com.lygttpod.monitor.data.MonitorData
 import com.lygttpod.monitor.utils.*
 import okhttp3.Headers
 import okhttp3.Interceptor
+import okhttp3.MultipartBody
 import okhttp3.Response
 import okio.Buffer
 import okio.GzipSource
@@ -83,6 +84,21 @@ class MonitorInterceptor : Interceptor {
 
             when {
                 requestBody == null || bodyHasUnknownEncoding(request.headers) || requestBody.isDuplex() || requestBody.isOneShot() -> {
+                }
+                requestBody is MultipartBody -> {
+                    var formatRequestBody = ""
+                    requestBody.parts.forEach {
+                        val isStream =
+                            it.body.contentType()?.toString()?.contains("otcet-stream") == true
+                        val key = it.headers?.value(0)
+                        formatRequestBody += if (isStream) {
+                            "${key}; value=文件流\n"
+                        } else {
+                            val value = it.body.readString()
+                            "${key}; value=${value}\n"
+                        }
+                    }
+                    monitorData.requestBody = formatRequestBody
                 }
                 else -> {
                     val buffer = Buffer()
