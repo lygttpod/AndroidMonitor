@@ -50,6 +50,7 @@ object MonitorHelper {
     var whiteContentTypes: String? = null
     var whiteHosts: String? = null
     var blackHosts: String? = null
+    var isFilterIPAddressHost: Boolean = false
 
     var isOpenMonitor = true
 
@@ -72,6 +73,7 @@ object MonitorHelper {
             whiteHosts = propertiesData?.whiteHosts
             blackHosts = propertiesData?.blackHosts
             port = propertiesData?.port?.toInt() ?: 0
+            isFilterIPAddressHost = propertiesData?.isFilterIPAddressHost ?: false
             initMonitorDataDao(context, dbName)
             initPCService(context, port)
         }

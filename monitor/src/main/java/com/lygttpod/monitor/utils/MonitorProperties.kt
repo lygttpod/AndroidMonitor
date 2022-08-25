@@ -17,6 +17,7 @@ class MonitorProperties {
         private const val KEY_WHITE_CONTENT_TYPES = "monitor.whiteContentTypes"
         private const val KEY_WHITE_HOSTS = "monitor.whiteHosts"
         private const val KEY_BLACK_HOSTS = "monitor.blackHosts"
+        private const val KEY_IS_FILTER_IPADDRESS_HOST = "monitor.isFilterIPAddressHost"
 
         private const val ASSETS_FILE_NAME = "monitor.properties"
     }
@@ -40,8 +41,18 @@ class MonitorProperties {
                 val whiteContentTypes = p.getProperty(KEY_WHITE_CONTENT_TYPES)
                 val whiteHosts = p.getProperty(KEY_WHITE_HOSTS)
                 val blackHosts = p.getProperty(KEY_BLACK_HOSTS)
+                val isFilterIPAddressHost =
+                    p.getProperty(KEY_IS_FILTER_IPADDRESS_HOST)?.toBoolean() ?: false
+
                 propertiesData =
-                    PropertiesData(port, dbName, whiteContentTypes, whiteHosts, blackHosts)
+                    PropertiesData(
+                        port,
+                        dbName,
+                        whiteContentTypes,
+                        whiteHosts,
+                        blackHosts,
+                        isFilterIPAddressHost
+                    )
             }
         } catch (e: IOException) {
             if (e is FileNotFoundException) {

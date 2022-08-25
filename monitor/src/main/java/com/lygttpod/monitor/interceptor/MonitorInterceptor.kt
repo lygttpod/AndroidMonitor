@@ -49,8 +49,7 @@ class MonitorInterceptor : Interceptor {
             return chain.proceed(request)
         }
 
-        //因为阿里云有些服务用的ip地址，故过滤
-        if (monitorData.host.isIpAddress()) {
+        if (MonitorHelper.isFilterIPAddressHost && monitorData.host.isIpAddress()) {
             return chain.proceed(request)
         }
 
