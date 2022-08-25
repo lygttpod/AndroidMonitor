@@ -12,7 +12,7 @@
 
 添加依赖
 ```
-   debugImplementation 'io.github.lygttpod:monitor:0.0.6'
+   debugImplementation 'io.github.lygttpod:monitor:0.0.7'
 ```
 -备注： 使用debugImplementation是为了只在测试环境中引入
 
@@ -66,6 +66,8 @@
         # Default whiteHosts = 
         # Host黑名单，默认没有黑名单
         # Default blackHosts = 
+        # 是否过滤纯IP地址的host 默认false
+        # Default isFilterIPAddressHost = false
         # 如何多个项目都集成抓包工具，可以设置不同的端口进行访问
         monitor.port=8080
         monitor.dbName=app_name_monitor_db
