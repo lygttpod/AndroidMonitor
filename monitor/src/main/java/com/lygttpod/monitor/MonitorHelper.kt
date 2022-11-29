@@ -157,14 +157,18 @@ object MonitorHelper {
             targetFile.listFiles()?.forEach { spFile ->
                 Log.d(TAG, "getSharedPrefsFiles: " + spFile.name)
                 val fileName = spFile.name
-                val name = if (fileName.endsWith(".xml")) fileName.split(".xml")[0] else fileName
-                map[name] = getSpFile(name)
+                if (!fileName.isNullOrBlank()) {
+                    val name = if (fileName.endsWith(".xml")) fileName.split(".xml")[0] else fileName
+                    val value = getSpFile(name)
+                    map[name] = value
+                }
             }
         }
         return map
     }
 
-    fun getSpFile(name: String): HashMap<String, SpValueInfo?> {
+    fun getSpFile(name: String?): HashMap<String, SpValueInfo?> {
+        if (name.isNullOrBlank()) return hashMapOf()
         val map = hashMapOf<String, SpValueInfo?>()
         context?.getSharedPreferences(name, Context.MODE_PRIVATE)?.all?.entries?.forEach {
             val valueType = when (it.value) {
@@ -176,7 +180,10 @@ object MonitorHelper {
                 is String -> SPValueType.String
                 else -> SPValueType.String
             }
-            map[it.key] = SpValueInfo(it.value, valueType)
+            val key = it.key
+            if (!key.isNullOrBlank()) {
+                map[key] = SpValueInfo(it.value, valueType)
+            }
         }
         return map
     }

@@ -194,7 +194,16 @@
             var copyBtn = document.getElementById(copyBtnId);
             if (copyBtn != null) {
                 copyBtn.addEventListener("click", function () {
-                    copyData(copyBtnId, copyResponseContentId);
+                    copyData(copyBtnId, copyResponseContentId, "复制文本");
+                });
+            }
+
+            var copyParamsBtnId = "copy_params_btn" + collapseId;
+            var copyParamsContentId = "copy_params_content" + collapseId;
+            var copyParamsBtn = document.getElementById(copyBtnId);
+            if (copyParamsBtn != null) {
+                copyParamsBtn.addEventListener("click", function () {
+                    copyData(copyParamsBtnId, copyParamsContentId, "请求参数：");
                 });
             }
         }
@@ -244,7 +253,7 @@
             bodyDiv += '<div class="panel-body"><pre>';
             bodyDiv += createRequestHeaderTable(data);
             bodyDiv += createRequestUrl(data);
-            bodyDiv += createPostRequestParams(data);
+            bodyDiv += createPostRequestParams(data, collapseId);
             bodyDiv += createCopyBtn(data, collapseId);
             bodyDiv += '<div id= "' + jsonViewId + '"></div>';
             bodyDiv += '</pre></div></div>';
@@ -257,18 +266,20 @@
         function createRequestHeaderTable(data) {
             if (isNotEmpty(data.requestHeaders) && isJSON(data.requestHeaders)) {
                 var headerObj = JSON.parse(data.requestHeaders);
-                if (headerObj.length < 7) return "";
+                if (headerObj.length == 0) return "";
                 var table = '<table class="table table-bordered">';
-                table += '<thead> <tr> <th>host</th> <th>' + headerObj[0].name + '</th> <th>' + headerObj[1].name + '</th> <th>' + headerObj[2].name + '</th> <th>' + headerObj[3].name + '</th><th>' + headerObj[4].name + '</th> <th>' + headerObj[5].name + '</th> <th>' + headerObj[6].name + '</th> </tr> </thead>';
+                table += '<thead> <tr> <th>host</th>';
+                for (let index = 0; index < headerObj.length; index++) {
+                    var headName = headerObj[index].name;
+                    table += '<th>' + headName + '</th>';
+                }
+                table += '</tr> </thead>';
                 table += '<tbody><tr class="info">';
                 table += '<td>' + data.host + '</td>';
-                table += '<td>' + headerObj[0].value + '</td>';
-                table += '<td>' + headerObj[1].value + '</td>';
-                table += '<td>' + headerObj[2].value + '</td>';
-                table += '<td>' + headerObj[3].value + '</td>';
-                table += '<td>' + headerObj[4].value + '</td>';
-                table += '<td>' + headerObj[5].value + '</td>';
-                table += '<td>' + headerObj[6].value + '</td>';
+                for (let index = 0; index < headerObj.length; index++) {
+                    var headValue = headerObj[index].value;
+                    table += '<td>' + headValue + '</td>';
+                }
                 table += '</tr></tbody></table><HR>';
                 return table;
             } else {
@@ -290,10 +301,19 @@
         /**
          * 创建请求参数
          */
-        function createPostRequestParams(data) {
-            if (isEmpty(data.requestBody)) return "";
-            var info = '<div class="well">';
-            info += "请求参数：" + data.requestBody;
+        function createPostRequestParams(data, id) {
+            var requestBody = data.requestBody;
+            if (isEmpty(requestBody)) return "";
+
+            var info = '<div class="copy_class well">';
+            info += '<div id=';
+            info += "copy_params_btn" + id + '>';
+            info += "请求参数：" + '</div>';
+            info += '<textarea class="copy_params"  id=';
+            info += "copy_params_content" + id + '>';
+            info += requestBody;
+            info += '</textarea>';
+            info += requestBody;
             info += '</div>';
             return info;
         }
@@ -316,7 +336,7 @@
             return info;
         }
 
-        function copyData(copyBtnId, copyResponseContentId) {
+        function copyData(copyBtnId, copyResponseContentId, originBtnText) {
             var copyContentView = document.getElementById(copyResponseContentId);
             copyContentView.select(); // 选中文本
             document.execCommand("copy"); // 执行浏览器复制命令
@@ -324,10 +344,11 @@
             copyBtnView.textContent = "复制成功";
             copyBtnView.style.color = '#5cb85c';
             setTimeout(function () {
-                copyBtnView.textContent = "复制文本";
+                copyBtnView.textContent = originBtnText;
                 copyBtnView.style.color = 'black';
             }, 1000);
         }
+
 
         /**
          * 创建jsonView数据

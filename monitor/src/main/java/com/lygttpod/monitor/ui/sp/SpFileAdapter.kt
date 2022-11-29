@@ -36,8 +36,8 @@ class SpFileAdapter : RecyclerView.Adapter<SpFileAdapter.SpFileViewHolder>() {
 
     override fun getItemCount() = list.size
 
-    fun setData(list: List<SpData>) {
-        this.list = list
+    fun setData(list: List<SpData>?) {
+        this.list = list ?: listOf()
         notifyDataSetChanged()
     }
 

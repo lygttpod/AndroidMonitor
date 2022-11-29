@@ -7,20 +7,24 @@
             android:name=".ui.MonitorMainActivity"
             android:icon="@mipmap/monitor_logo"
             android:label="@string/monitor_app_name"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:taskAffinity="com.lygttpod.monitor.${applicationId}"
             android:theme="@style/Monitor_AppTheme" />
 
         <activity
+            android:exported="false"
             android:name=".ui.MonitorDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Monitor_AppTheme" />
 
         <activity
+            android:exported="false"
             android:name=".ui.MonitorConfigActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Monitor_AppTheme" />
         <activity
+            android:exported="false"
             android:name=".ui.sp.SPFileDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Monitor_AppTheme" />
