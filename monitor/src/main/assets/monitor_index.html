@@ -200,7 +200,7 @@
 
             var copyParamsBtnId = "copy_params_btn" + collapseId;
             var copyParamsContentId = "copy_params_content" + collapseId;
-            var copyParamsBtn = document.getElementById(copyBtnId);
+            var copyParamsBtn = document.getElementById(copyParamsBtnId);
             if (copyParamsBtn != null) {
                 copyParamsBtn.addEventListener("click", function () {
                     copyData(copyParamsBtnId, copyParamsContentId, "请求参数：");
@@ -309,7 +309,7 @@
             info += '<div id=';
             info += "copy_params_btn" + id + '>';
             info += "请求参数：" + '</div>';
-            info += '<textarea class="copy_params"  id=';
+            info += '<textarea class="copy_textarea"  id=';
             info += "copy_params_content" + id + '>';
             info += requestBody;
             info += '</textarea>';
@@ -328,7 +328,7 @@
             info += '<div id=';
             info += "copy_btn" + id + '>';
             info += "复制文本" + '</div>';
-            info += '<textarea class="copy_response"  id=';
+            info += '<textarea class="copy_textarea"  id=';
             info += "copy_response_content" + id + '>';
             info += responseBody;
             info += '</textarea>';
@@ -545,7 +545,7 @@
             align-items: center;
         }
 
-        .copy_response {
+        .copy_textarea {
             width: 10px;
             height: 10px;
         }
