@@ -16,12 +16,7 @@ class MonitorRequestFragment : Fragment() {
     companion object {
         fun newInstance(monitorData: MonitorData?): MonitorRequestFragment {
             return MonitorRequestFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable(
-                        MonitorDetailActivity.KEY_MONITOR_DATA,
-                        monitorData
-                    )
-                }
+                this.monitorData = monitorData
             }
         }
     }
@@ -41,8 +36,6 @@ class MonitorRequestFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMonitorRequestBinding.bind(view)
-        monitorData =
-            arguments?.getSerializable(MonitorDetailActivity.KEY_MONITOR_DATA) as? MonitorData?
         initData()
     }
 
@@ -59,5 +52,10 @@ class MonitorRequestFragment : Fragment() {
             monitorData?.requestBody
                 ?: return, monitorData?.requestContentType
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        monitorData = null
     }
 }

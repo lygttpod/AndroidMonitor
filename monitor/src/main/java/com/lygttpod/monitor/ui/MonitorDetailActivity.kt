@@ -12,17 +12,13 @@ import com.lygttpod.monitor.utils.formatBody
 class MonitorDetailActivity : AppCompatActivity() {
 
     companion object {
-        const val KEY_MONITOR_DATA = "monitor_data"
+        private var monitorData: MonitorData? = null
         fun buildIntent(context: Context, monitorData: MonitorData): Intent {
             return Intent(context, MonitorDetailActivity::class.java).apply {
-                val bundle = Bundle()
-                bundle.putSerializable(KEY_MONITOR_DATA, monitorData)
-                this.putExtras(bundle)
+                MonitorDetailActivity.monitorData = monitorData
             }
         }
     }
-
-    private var monitorData: MonitorData? = null
 
     private lateinit var binding: ActivityMonitorDetailBinding
 
@@ -30,7 +26,6 @@ class MonitorDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMonitorDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        monitorData = intent.getSerializableExtra(KEY_MONITOR_DATA) as? MonitorData?
         initView()
     }
 
@@ -62,5 +57,10 @@ class MonitorDetailActivity : AppCompatActivity() {
         shareIntent.type = "text/plain"
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareString)
         startActivity(Intent.createChooser(shareIntent, "分享抓包数据"))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        monitorData = null
     }
 }
