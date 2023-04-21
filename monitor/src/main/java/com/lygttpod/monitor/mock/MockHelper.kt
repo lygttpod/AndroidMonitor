@@ -14,7 +14,7 @@ object MockHelper {
     var mockBaseUrl: String = ""
 
     /**
-     * 需要mock的接口path  例如：/api/spero-ultron-service/room/400/recommendAuthor
+     * 需要mock的接口path  例如：/article/list/0/json
      */
     var mockPaths: String = ""
 
