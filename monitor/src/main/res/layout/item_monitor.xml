@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_goneMarginLeft="10dp"
-        tools:text="https://dev-outspace.secon.cn/" />
+        tools:text="https://www.wanandroid.com/" />
 
     <TextView
         android:id="@+id/tv_path"
@@ -51,7 +51,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_host"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_goneMarginLeft="10dp"
-        tools:text="spero-ultron-service/user/spero_165653/image" />
+        tools:text="article/list/0/json" />
 
     <TextView
         android:id="@+id/tv_request_date"
